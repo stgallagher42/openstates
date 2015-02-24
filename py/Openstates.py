@@ -5,7 +5,7 @@
 import sys, os, time, datetime, warnings, logging
 from sunlight import openstates
 import pyodbc, win32com, win32com.client
-from mva_os_attrconfig import AttrConfig
+from attrconfig import AttrConfig
 
 import urllib.request, urllib.error, urllib.parse
 import re
@@ -19,7 +19,7 @@ logfile = 'C:\Shannon\Programs\log.log'
 logging.basicConfig(filename=logfile,level=logging.DEBUG, format=FORMAT)
 ROW_TEMPLATE = {'watched': None, 'dateadd': datetime.datetime.now(), 'update_insert_flag':'insert'}
     # Program Constants
-config = AttrConfig(os.path.join(parent_dir, 'mva_os_config'))
+config = AttrConfig(os.path.join(parent_dir, 'config'))
 dbconn = pyodbc.connect(config.default.dbconnstr)
 
 class PowerBill:
