@@ -1,0 +1,68 @@
+## Powerbill Config File ##
+
+[default]
+dbconnstr=DRIVER={SQL Server};SERVER=xxx;DATABASE=xxx;UID=gallaghers;PWD=xxx
+states = NC SC
+prev_days = 5
+output = 'C:\Legislation\Current_%s_Legislation_mva_os.txt'
+
+[SC]
+# These change rather unpredictably
+output = C:\Legislation\Current_SC_Legislation_mva_os.txt
+
+[NC]
+# These change rather unpredictably
+output = C:\Legislation\Current_NC_Legislation_mva_os.txt
+goodsearchpage = http://www.ncga.state.nc.us/gascripts/SimpleBillInquiry/displaybills.pl?Session=%s&tab=GSChapter&number=%s
+gs_nums = 105 105a 105b 150b 95
+
+[billcommon]
+# This should stay about the same
+select_sql = SELECT dbo.Legislation_Table_v2.lt_ID, dbo.Legislation_Table_v2.lt_Session, dbo.Legislation_Table_v2.lt_State, dbo.Legislation_Table_v2.lt_Legislation_Division, dbo.Legislation_Table_v2.lt_BillNum, dbo.Legislation_Table_v2.lt_Watched, dbo.Legislation_Table_v2.lt_UpdatedDate, dbo.Legislation_Table_v2.lt_Webpage, dbo.Legislation_Table_v2.lt_ost_ID, dbo.Legislation_Table_v2.lt_subjects FROM dbo.Legislation_Table_v2 WHERE (((dbo.Legislation_Table_v2.lt_Session) Like ?) AND ((dbo.Legislation_Table_v2.lt_State) Like ?));
+select_cols = id session state div num watched updateddate webpage ost_id subjects
+compare_cols = div num ost_id
+
+update_sql = UPDATE dbo.Legislation_Table_v2 SET dbo.Legislation_Table_v2.lt_UpdatedDetails = ?, dbo.Legislation_Table_v2.lt_UpdatedDate = ? WHERE (((dbo.Legislation_Table_v2.lt_ID)=?));
+update_cols = details dateadd id
+
+insert_sql = INSERT INTO dbo.Legislation_Table_v2 (lt_Session, lt_State, lt_Year, lt_Legislation_Division, lt_BillNum, lt_BillDetails, lt_Watched, lt_UpdatedDate, lt_Webpage, lt_ost_ID, lt_subjects) VALUES (?,?,?,?,?,?,?,?,?,?,?);
+insert_cols = session st year div num details watched dateadd webpage ost_id subjects
+
+[watched]
+select_sql = SELECT dbo.Legislation_Table_v2.lt_Legislation_Division, dbo.Legislation_Table_v2.lt_BillNum, dbo.Legislation_Table_v2.lt_BillName, dbo.Legislation_Table_v2.lt_UpdatedDetails, dbo.Legislation_Table_v2.lt_Webpage, dbo.Legislation_Table_v2.lt_ost_ID, dbo.Legislation_Table_v2.lt_subjects FROM dbo.Legislation_Table_v2 WHERE (((dbo.Legislation_Table_v2.lt_Session) Like ?) AND ((dbo.Legislation_Table_v2.lt_State) Like ?) AND ((dbo.Legislation_Table_v2.lt_Watched) Like ?));
+select_cols = div num name details webpage ost_id subjects
+compare_cols = div num ost_id
+
+[legislation_table_types]
+id = int
+year = int
+st = str
+session = str
+div = str
+num = int
+title = str
+webpage = str
+ost_id = str
+subjects = str
+dateadd = datetime
+
+[LEGISLATION_TABLE]
+id = lt_ID
+year = lt_Year
+st = lt_State
+session = lt_Session
+div = lt_Legislation_Division
+num = lt_BillNum
+title = lt_BillName
+details = lt_BillDetails
+watched = lt_Watched
+tax = lt_Tax
+impact = lt_Impact
+similar = lt_Similar
+reviewer = lt_Reviewer
+notes = lt_Notes
+udate = lt_UpdatedDate
+webpage = lt_Webpage
+ost_id = lt_ost_ID
+subjects = lt_subjects
+dateadd = DateAdd
